@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine? 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            position: relative;
+        }
+
+        h1 {
+            color: #e63946;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            animation: heartbeat 1.5s infinite;
+            line-height: 1.4;
+        }
+
+        .buttons {
+            margin-top: 40px;
+            min-height: 60px;
+        }
+
+        .yes-wrapper {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .no-wrapper {
+            display: inline-block;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        #yesBtn {
+            background: #06d6a0;
+            color: white;
+        }
+
+        #yesBtn:hover {
+            background: #05b589;
+            transform: scale(1.1);
+        }
+
+        #noBtn {
+            background: #ef476f;
+            color: white;
+        }
+
+        .success-message {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .success-message h2 {
+            font-size: 2.5em;
+            color: #e63946;
+            margin-bottom: 30px;
+        }
+
+        .success-message img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .love-text {
+            font-size: 2em;
+            color: #e63946;
+            margin-top: 20px;
+            font-weight: bold;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💕 Are you ready for a lifetime of Valentine’s Days with me? 💕</h1>
+        
+        <div class="buttons" id="buttonContainer">
+            <div class="yes-wrapper">
+                <button id="yesBtn">Yes! 😊</button>
+            </div>
+            <div class="no-wrapper">
+                <button id="noBtn">No 😢</button>
+            </div>
+        </div>
+
+        <div class="success-message" id="successMsg">
+            <h2>Best decision ever! 😘</h2>
+            <img src="Happy Season 9 GIF by The Office.gif" alt="Celebration GIF">
+            <div class="love-text">I love you ❤️</div>
+        </div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const buttonContainer = document.getElementById('buttonContainer');
+        const successMsg = document.getElementById('successMsg');
+        const heading = document.querySelector('h1');
+
+        // Store initial position of Yes button for collision avoidance
+        const yesInitialRect = yesBtn.getBoundingClientRect();
+        const yesInitialX = yesInitialRect.left;
+        const yesInitialY = yesInitialRect.top;
+
+        // Make "No" button run away on mouse enter
+        noBtn.addEventListener('mouseenter', () => {
+            let randomX, randomY;
+            let tooClose = true;
+            
+            // Keep generating random positions until we find one away from Yes button
+            while (tooClose) {
+                const maxX = window.innerWidth - noBtn.offsetWidth - 50;
+                const maxY = window.innerHeight - noBtn.offsetHeight - 50;
+                const minX = 50;
+                const minY = 50;
+                
+                randomX = Math.random() * (maxX - minX) + minX;
+                randomY = Math.random() * (maxY - minY) + minY;
+                
+                // Check distance from Yes button initial position
+                const distanceX = Math.abs(randomX - yesInitialX);
+                const distanceY = Math.abs(randomY - yesInitialY);
+                
+                // If far enough away from Yes button, break loop
+                if (distanceX > 200 || distanceY > 150) {
+                    tooClose = false;
+                }
+            }
+            
+            // Move No button to random position
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        });
+
+        // Handle "Yes" button click
+        yesBtn.addEventListener('click', () => {
+            heading.classList.add('hidden');
+            buttonContainer.classList.add('hidden');
+            successMsg.style.display = 'block';
+        });
+
+        // Optional: Make "No" button also try to escape on mobile (touch)
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            
+            let randomX, randomY;
+            let tooClose = true;
+            
+            while (tooClose) {
+                const maxX = window.innerWidth - noBtn.offsetWidth - 50;
+                const maxY = window.innerHeight - noBtn.offsetHeight - 50;
+                const minX = 50;
+                const minY = 50;
+                
+                randomX = Math.random() * (maxX - minX) + minX;
+                randomY = Math.random() * (maxY - minY) + minY;
+                
+                const distanceX = Math.abs(randomX - yesInitialX);
+                const distanceY = Math.abs(randomY - yesInitialY);
+                
+                if (distanceX > 200 || distanceY > 150) {
+                    tooClose = false;
+                }
+            }
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        });
+    </script>
+</body>
+</html>
